@@ -19,14 +19,14 @@ body {
 }
 
 h1 {
-   background-color: black;
+   background-color: rgb(2, 24, 6);
    border: 3px solid black;
    border-radius: 25px;
    color: lime;
    font-family: 'Electrolize', sans-serif;
    font-size: 2.5rem;
    font-weight: 900;
-   text-shadow: 0 0 25px limegreen;
+   text-shadow: 0 0 25px rgb(135, 241, 135);
    width: 400px;
    margin: 20px auto;
    padding: 5px;

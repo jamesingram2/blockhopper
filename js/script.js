@@ -15,6 +15,7 @@ let highScoreLabel;
 let lives = 50;
 let livesLabel;
 let healthLabel;
+let gameOverLabel;
 let startAudio = new Audio('./sounds/sfx-magic2.mp3');
 let jumpAudio = new Audio('./sounds/jump.mp3');
 let successAudio = new Audio('./sounds/sfx-voice10.mp3')
@@ -32,6 +33,7 @@ function startGame() {
     scoreLabel = new createScoreLabel(10, 60);
     healthLabel = new createHealthLabel(400, 30);
     livesLabel = new createLivesLabel(410, 60);
+    gameOverLabel = new createGameOverLabel(150, 225);
     startAudio.play();
 }
 
@@ -158,6 +160,8 @@ function detectCollision() {
          jumpEl.disabled = true;
          jumpEl.style = "background-color: rgba(255, 0, 0, 0.3); color: #eee; border: 2px solid black; cursor: auto;";
          restartEl.style = "background-color: green; color: white; border: 2px solid black; cursor: pointer;"
+         gameOverLabel.text = "GAME OVER"
+         gameOverLabel.draw();
          collisionAudio.play();
          deathAudio.play();
          setTimeout(function() {
@@ -273,6 +277,17 @@ function createHealthLabel(x, y) {
         ctx.fillStyle = "black";
         ctx.fillText(this.text, this.x, this.y);
     }
+}
+
+function createGameOverLabel(x, y) {
+   this.x = x;
+   this.y = y;
+   this.draw = function() {
+      ctx = gameCanvas.context;
+      ctx.font = "50px Electrolize";
+      ctx.fillStyle = "lime";
+      ctx.fillText(this.text, this.x, this.y);
+   }
 }
 
 function updateCanvas() {
