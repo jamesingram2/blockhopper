@@ -10,8 +10,11 @@ let jumpSpeed = 0;
 let block;
 let score = 0;
 let scoreLabel;
+let highScore;
+let highScoreLabel;
 let lives = 50;
 let livesLabel;
+let healthLabel;
 let startAudio = new Audio('./sounds/sfx-magic2.mp3');
 let jumpAudio = new Audio('./sounds/jump.mp3');
 let successAudio = new Audio('./sounds/sfx-voice10.mp3')
@@ -25,8 +28,10 @@ function startGame() {
     gameCanvas.start();
     player = new createPlayer(25, 25, 15);
     block = new createBlock();
-    scoreLabel = new createScoreLabel(460, 30);
-    livesLabel = new createLivesLabel(10, 30);
+    highScoreLabel = new createHighScoreLabel(10, 30);
+    scoreLabel = new createScoreLabel(10, 60);
+    healthLabel = new createHealthLabel(400, 30);
+    livesLabel = new createLivesLabel(410, 60);
     startAudio.play();
 }
 
@@ -146,6 +151,7 @@ function detectCollision() {
    if (playerRight >=  blockLeft && playerLeft <= blockLeft && playerBottom >= blockTop) {
       loseLife();
       if (lives <= 0) {
+         localStorage.setItem(highScore, highScore);
          playArea.childNodes[0].style.backgroundImage = "linear-gradient(to top left, black, lightgray, darkgray)";
          let jumpEl = document.getElementById("jump");
          let restartEl = document.getElementById("restart");
@@ -246,6 +252,29 @@ function createLivesLabel(x, y) {
    }
 }
 
+function createHighScoreLabel(x, y) {
+    this.highScore = 0;
+    this.x = x;
+    this.y = y;
+    this.draw = function() {
+        ctx = gameCanvas.context;
+        ctx.font = "25px Marker Felt";
+        ctx.fillStyle = "black";
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
+function createHealthLabel(x, y) {
+    this.x = x;
+    this.y = y;
+    this.draw = function() {
+        ctx = gameCanvas.context;
+        ctx.font = "25px Marker Felt";
+        ctx.fillStyle = "black";
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
 function updateCanvas() {
     detectCollision();
     ctx = gameCanvas.context;
@@ -258,23 +287,41 @@ function updateCanvas() {
     // Redraw your score and update the value
     scoreLabel.text = "SCORE: " + score;
     scoreLabel.draw();
+    if (!localStorage.highScore) {
+        highScore = score;
+        highScoreLabel.text = "HI-SCORE: " + highScore;
+        highScoreLabel.draw();
+    } else {
+        highScore = localStorage.getItem(highScore);
+        if (score < highScore) {
+            highScore = score;
+            highScoreLabel.text = "HI-SCORE: " + highScore;
+            highScoreLabel.draw();
+        } else {
+            highScore = localStorage.getItem(highScore);
+            highScoreLabel.text = "HI-SCORE: " + highScore;
+            highScoreLabel.draw();
+        }
+    }
+    healthLabel.text = "HEALTH LEVEL";
+    healthLabel.draw();
     if (lives <= 50 && lives >= 40) {
-       livesLabel.text = "HEALTH: ❤️️❤️️❤️️❤️️❤️️";
+       livesLabel.text = "❤️️❤️️❤️️❤️️❤️️";
        livesLabel.draw();
     } else if (lives < 40 && lives >= 30) {
-       livesLabel.text = "HEALTH: ❤️️❤️️❤️️❤️️";
+       livesLabel.text = "❤️️❤️️❤️️❤️️🤍";
        livesLabel.draw();
     } else if (lives < 30 && lives >= 20) {
-       livesLabel.text = "HEALTH: ❤️️❤️️❤️️";
+       livesLabel.text = "❤️️❤️️❤️️🤍🤍";
        livesLabel.draw();
     } else if (lives < 20 && lives >= 10) {
-       livesLabel.text = "HEALTH: ❤️️❤️️";
+       livesLabel.text = "❤️️❤️️🤍🤍🤍";
        livesLabel.draw();
     } else if (lives < 10 && lives > 1) {
-       livesLabel.text = "HEALTH: ❤️️";
+       livesLabel.text = "❤️️🤍🤍🤍🤍";
        livesLabel.draw();
     } else {
-       livesLabel.text = "💀 GAME OVER";
+       livesLabel.text = "💀💀💀💀💀";
        livesLabel.draw();
     }
 }
